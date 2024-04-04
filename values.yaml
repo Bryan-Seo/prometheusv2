@@ -339,7 +339,8 @@ server:
 
     ## Prometheus server Ingress additional labels
     ##
-    extraLabels: {}
+    extraLabels:
+      labeltest: prometheus-v2
 
     ## Redirect ingress to an additional defined port on the service
     # servicePort: 8081
@@ -384,16 +385,17 @@ server:
   ## Node tolerations for server scheduling to nodes with taints
   ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
   ##
-  tolerations: []
-    # - key: "key"
-    #   operator: "Equal|Exists"
-    #   value: "value"
-    #   effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
+  tolerations:
+    - key: "ruletype"
+      operator: "Equal"
+      value: "monitoring"
+      effect: "NoExecute"  
 
   ## Node labels for Prometheus server pod assignment
   ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    labeltest: addnode
 
   ## Pod affinity
   ##
@@ -1257,7 +1259,11 @@ prometheus-node-exporter:
 
   containerSecurityContext:
     allowPrivilegeEscalation: false
-
+  tolerations:
+    - key: "ruletype"
+      operator: "Equal"
+      value: "monitoring"
+      effect: "NoExecute"
 ## prometheus-pushgateway sub-chart configurable values
 ## Please see https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-pushgateway
 ##
